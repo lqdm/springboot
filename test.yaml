@@ -1,0 +1,73 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: springboot
+  namespace: test
+spec:
+  type: NodePort
+  ports:
+    - port: 8080
+      targetPort: 8080
+  selector:
+    app: test
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: springboot
+  namespace: test
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8080
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    app: springboot
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: springboot
+  namespace: test
+spec:
+  selector:
+    matchLabels:
+      app: springboot
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: springboot
+    spec:
+      containers:
+        - name: springboot
+          image: $REGISTRY/$DOCKERHUB_NAMESPACE/$APP_NAME:SNAPSHOT-$BRANCH_NAME-$BUILD_NUMBER
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+              name: port
+              protocol: TCP
+          command: ["/bin/sh"]
+          args: ["-c", "set -e && java -jar app.jar  --server.port=8080"]
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+  name: springboot-ingress
+  namespace: test
+spec:
+  rules:
+    - host: {{HOST}}
+      http:
+        paths:
+          - backend:
+              serviceName: springboot
+              servicePort: 8080
+            path: /
