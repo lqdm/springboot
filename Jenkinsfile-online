@@ -22,7 +22,7 @@ environment {
   stages {
     stage('拉代码') {
       steps {
-        git(url: 'https://github.com/lqdm/springboot.git', credentialsId: 'gitlab-id', branch: 'develop', changelog: true, poll: false)
+        git(url: 'https://github.com/lqdm/springboot.git', credentialsId: 'gitlab-id', branch: 'main', changelog: true, poll: false)
       }
     }
     stage('构建镜像') {
