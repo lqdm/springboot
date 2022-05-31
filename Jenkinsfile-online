@@ -15,7 +15,7 @@ pipeline {
         KUBECONFIG_CREDENTIAL_ID = 'demo-kubeconfig'
         REGISTRY = 'docker.io'
         DOCKERHUB_NAMESPACE = 'luomengsun'
-        GITHUB_ACCOUNT = 'luomengsun@gmail.com'
+        GITHUB_ACCOUNT = 'lqdm'
         APP_NAME = 'springboot'
     }
 
